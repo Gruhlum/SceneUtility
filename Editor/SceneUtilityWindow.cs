@@ -8,24 +8,6 @@ namespace HexTecGames.SceneUtility
 {
     public class SceneUtilityWindow : EditorWindow
     {
-        [SerializeField] private SceneUtility sceneUtility = default;
-
-        void OnEnable()
-        {
-            sceneUtility.OnChanged += SceneUtility_OnChanged;
-        }
-
-        void OnDisable()
-        {
-            sceneUtility.OnChanged -= SceneUtility_OnChanged;
-        }
-        private void SceneUtility_OnChanged()
-        {
-            var result = sceneUtility.GetStartScene();
-            EditorSceneManager.playModeStartScene = result;
-            Debug.Log("Setting start scene to: " + result.name);
-        }
-
         [MenuItem("Tools/Settings/SceneUtility")]
         public static void ShowWindow()
         {
@@ -33,8 +15,9 @@ namespace HexTecGames.SceneUtility
         }
         private void OnGUI()
         {
-            UnityEditor.Editor m_MyScriptableObjectEditor = UnityEditor.Editor.CreateEditor(sceneUtility);
+            Editor m_MyScriptableObjectEditor = Editor.CreateEditor(SceneUtility.instance);
             m_MyScriptableObjectEditor.OnInspectorGUI();
+            SceneUtility.instance.Save();
         }
     }
 }

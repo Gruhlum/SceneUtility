@@ -7,20 +7,20 @@ using UnityEngine;
 
 namespace HexTecGames.SceneUtility
 {
-    //[CreateAssetMenu(menuName = "HexTecGames/SceneUtility/Settings")]
-    public class SceneUtility : ScriptableObject
+    [FilePath("SceneUtility/Data", FilePathAttribute.Location.ProjectFolder)]
+    public class SceneUtility : ScriptableSingleton<SceneUtility>
     {
-        public bool useCurrentScene;
-        public SceneAsset startScene;
+        [SerializeField] private bool useCurrentScene;
+        [SerializeField] private SceneAsset startScene;
 
-        public event Action OnChanged;
 
-        public void OnValidate()
+        [InitializeOnLoadMethod]
+        public static void SetData()
         {
-            OnChanged?.Invoke();
+            instance.SetStartScene();
         }
 
-       public SceneAsset GetStartScene()
+        private SceneAsset GetStartScene()
         {
             if (!useCurrentScene && startScene != null)
             {
@@ -31,9 +31,16 @@ namespace HexTecGames.SceneUtility
                 Debug.Log(EditorSceneManager.GetActiveScene().path);
                 var result = AssetDatabase.LoadAssetAtPath<SceneAsset>(EditorSceneManager.GetActiveScene().path);
                 return result;
-            } 
+            }
         }
-
+        public void SetStartScene()
+        {
+            EditorSceneManager.playModeStartScene = GetStartScene();
+        }
+        public void Save()
+        {
+            Save(true);
+        }
         // Have an option to select a specific scene to start, or the current scene
         // Select all scenes from a dropdown (maybe only those that are in a collection somewhere)
         // Load a specific scene when play mode is started
