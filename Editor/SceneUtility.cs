@@ -28,7 +28,7 @@ namespace HexTecGames.SceneUtility
             }
             else
             {
-                Debug.Log(EditorSceneManager.GetActiveScene().path);
+                //Debug.Log(EditorSceneManager.GetActiveScene().path);
                 var result = AssetDatabase.LoadAssetAtPath<SceneAsset>(EditorSceneManager.GetActiveScene().path);
                 return result;
             }
